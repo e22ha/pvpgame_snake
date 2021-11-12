@@ -10,32 +10,19 @@ namespace console_snake
 {
     class Sounds
     {
-        public void LoadTypewriterSound()
+        public void LoadEatSound()
         {
-            Thread backgroundSound = new Thread(new ThreadStart(PlayKey));
+            Thread backgroundSound = new Thread(new ThreadStart(EatSound));
             backgroundSound.IsBackground = true;
             backgroundSound.Start();
         }
 
-        public void LoadCarriageReturn()
-        {
-            Thread backgroundSound = new Thread(new ThreadStart(PlayCarriageReturn));
-            backgroundSound.IsBackground = true;
-            backgroundSound.Start();
-        }
-
-        private static void PlayKey()
+        private static void EatSound()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"D:\Music\Саунд дизайн\Daruma Audio – SFX Library (CC BY)\Keyboard\keyboard_01.wav";
+            player.SoundLocation = @"D:\Code\PiOGI 2\pvpgame_snake\.wav\icon_06.wav";
             player.Play();
         }
 
-        private static void PlayCarriageReturn()
-        {
-            SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"D:\Music\Саунд дизайн\Daruma Audio – SFX Library (CC BY)\Keyboard\keyboard_02.wav";
-            player.PlaySync();
-        }
     }
 }
