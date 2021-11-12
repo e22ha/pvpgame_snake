@@ -6,7 +6,9 @@ namespace console_snake
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Sounds sounds = new();
+            sounds.LoadTypewriterSound();
+            Console.ReadKey();
         }
     }
 }
