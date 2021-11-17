@@ -19,6 +19,7 @@ namespace console_snake
             Console.SetWindowSize(x + 1, y + 1);
             Console.SetBufferSize(x + 1, y + 1);
             Console.CursorVisible = false;
+            
 
             walls = new Walls(x, y, '#');
             snake = new Snake(x / 2, y / 2, 3);
@@ -32,7 +33,8 @@ namespace console_snake
             {
                 if (Console.KeyAvailable)
                 {
-                    ConsoleKeyInfo key = Console.ReadKey();
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
                     snake.Rotation(key.Key);
                 }
             }
