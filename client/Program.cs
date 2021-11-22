@@ -13,6 +13,7 @@ namespace console_snake
 
         static Walls walls;
         static Snake snake;
+        static Snake snake1;
         static FoodFactory foodFactory;
         static Timer time;
         const string parameterForSecondProcess = "--secondary";
@@ -39,10 +40,12 @@ namespace console_snake
                 Console.CursorVisible = false;
 
 
-
+                Console.WriteLine("Are you read(y)?");
                 if (Console.ReadKey().Key == ConsoleKey.Y ) {
+                    Console.Clear();
                     walls = new Walls(x, y, '#');
                     snake = new Snake(x / 2, y / 2, 3);
+                    snake1 = new Snake(x / 4, y / 3, 3);
 
                     foodFactory = new FoodFactory(x, y, '@');
                     foodFactory.CreateFood();
@@ -55,6 +58,7 @@ namespace console_snake
                             ConsoleKeyInfo key = Console.ReadKey(true);
 
                             snake.Rotation(key.Key);
+                            snake1.Rotation(ConsoleKey.RightArrow);
                         }
                     } 
                 }
@@ -99,17 +103,19 @@ namespace console_snake
 
         static void Loop(object obj)
         {
-            if (walls.IsHit(snake.GetHead()) || snake.IsHit(snake.GetHead()))
+            if (walls.IsHit(snake.GetHead()) || snake.IsHit(snake.GetHead())|| walls.IsHit(snake1.GetHead()) || snake1.IsHit(snake1.GetHead()) || snake.IsHit(snake1.GetHead()) || snake1.IsHit(snake.GetHead()))
             {
                 time.Change(0, Timeout.Infinite);
             }
-            else if (snake.Eat(foodFactory.food))
+            else if (snake.Eat(foodFactory.food) || snake1.Eat(foodFactory.food))
             {
                 foodFactory.CreateFood();
             }
             else
             {
                 snake.Move();
+                snake1.Move();
+                client.generate_msg(snake,snake1);
             }
         }// Loop()
     }

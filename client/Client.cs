@@ -143,6 +143,15 @@ namespace console_snake
             }
         }
 
+        public void generate_msg(Snake snake1, Snake snake2) {
+            string data = "";
+
+            data += snake1.GetHead().x.ToString() + snake1.GetHead().y.ToString();
+
+
+            send_msg(data);
+        }
+
         private void show_ping_pong()
         {
             for (int i = 0; i < 3; i++)
