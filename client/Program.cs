@@ -21,10 +21,41 @@ namespace console_snake
 
         static int Main(string[] args)
         {
+            client.DataForUpdate += Client_DataForUpdate;
             if (args.FirstOrDefault() == parameterForSecondProcess)
                 return RunClient(args);
             else
                 return RunServer(args);
+        }
+
+        private static void Client_DataForUpdate(object sender, EventArgs e)
+        {
+            string[] data = sender.ToString().Split(".");
+
+            //LeftArrow 37 Клавиша СТРЕЛКА ВЛЕВО.
+            //UpArrow 38 Клавиша СТРЕЛКА ВВЕРХ.
+            //RightArrow 39 Клавиша СТРЕЛКА ВПРАВО.
+            //DownArrow	40 Клавиша СТРЕЛКА ВНИЗ.
+
+
+            if (data[3] == "RightArrow")
+                snake1.Rotation(ConsoleKey.RightArrow);
+            else if (data[3] == "LeftArrow")
+                snake1.Rotation(ConsoleKey.LeftArrow);
+            else if (data[3] == "UpArrow")
+                snake1.Rotation(ConsoleKey.UpArrow);
+            else if (data[3] == "DownArrow")
+                snake1.Rotation(ConsoleKey.DownArrow);
+
+            //if (data[5] == "RIGHT")
+            //    snake1.Rotation(ConsoleKey.RightArrow);
+            //else if (data[5] == "LEFT")
+            //    snake1.Rotation(ConsoleKey.LeftArrow);
+            //else if (data[5] == "UP")
+            //    snake1.Rotation(ConsoleKey.UpArrow);
+            //else if (data[5] == "DOWN")
+            //    snake1.Rotation(ConsoleKey.DownArrow);
+
         }
 
         static int RunServer(string[] args)
@@ -41,26 +72,40 @@ namespace console_snake
 
 
                 Console.WriteLine("Are you read(y)?");
-                if (Console.ReadKey().Key == ConsoleKey.Y ) {
+                if (Console.ReadKey().Key == ConsoleKey.Y)
+                {
+                    Console.WriteLine("Are you (1) or(2)?");
+
+                    if (Console.ReadKey().Key == ConsoleKey.D1 || Console.ReadKey().Key == ConsoleKey.NumPad1)
+                    {
+                        snake = new Snake(x / 2, y / 2, 3);
+                        snake1 = new Snake(x / 3, y / 3, 3);
+                    }
+                    else if(Console.ReadKey().Key == ConsoleKey.D2 || Console.ReadKey().Key == ConsoleKey.NumPad2)
+                    {
+                        snake = new Snake(x / 3, y / 3, 3);
+                        snake1 = new Snake(x / 2, y / 2, 3);
+                    }
+
                     Console.Clear();
                     walls = new Walls(x, y, '#');
-                    snake = new Snake(x / 2, y / 2, 3);
-                    snake1 = new Snake(x / 4, y / 3, 3);
 
                     foodFactory = new FoodFactory(x, y, '@');
                     foodFactory.CreateFood();
 
-                    time = new Timer(Loop, null, 0, 200);
+                    time = new Timer(Loop, null, 0, 1000);
                     while (true)
                     {
                         if (Console.KeyAvailable)
                         {
                             ConsoleKeyInfo key = Console.ReadKey(true);
 
+                            client.generate_msg(snake, key);
+
                             snake.Rotation(key.Key);
-                            snake1.Rotation(ConsoleKey.RightArrow);
+
                         }
-                    } 
+                    }
                 }
             }
             catch (IOException ex)
@@ -87,23 +132,20 @@ namespace console_snake
             {
                 return 2;
             }
-
             try
             {
                 AlternateConsole.RunClient(args[1]);
             }
             catch
             {
-                return 1;
+                return 2;
             }
             return 0;
         }
 
-
-
         static void Loop(object obj)
         {
-            if (walls.IsHit(snake.GetHead()) || snake.IsHit(snake.GetHead())|| walls.IsHit(snake1.GetHead()) || snake1.IsHit(snake1.GetHead()) || snake.IsHit(snake1.GetHead()) || snake1.IsHit(snake.GetHead()))
+            if (walls.IsHit(snake.GetHead()) || snake.IsHit(snake.GetHead()) || walls.IsHit(snake1.GetHead()) || snake1.IsHit(snake1.GetHead()) || snake.IsHit(snake1.GetHead()) || snake1.IsHit(snake.GetHead()))
             {
                 time.Change(0, Timeout.Infinite);
             }
@@ -115,7 +157,7 @@ namespace console_snake
             {
                 snake.Move();
                 snake1.Move();
-                client.generate_msg(snake,snake1);
+
             }
         }// Loop()
     }

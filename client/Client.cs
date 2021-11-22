@@ -91,6 +91,7 @@ namespace console_snake
                         else
                         {
                             altcons.WriteLine(message);
+                            DataForUpdate?.Invoke(message,null);
                         }
                     }
                     else
@@ -114,13 +115,14 @@ namespace console_snake
             }
         }
 
-        private void disconnect_()
+        public event EventHandler DataForUpdate;
+
+        public void disconnect_()
         {
             altcons.WriteLine("Отключение...");
             send_msg("/bye");
             stream.Close();
             client.Close();
-
         }
 
         public void send_msg(string ms)
@@ -143,11 +145,15 @@ namespace console_snake
             }
         }
 
-        public void generate_msg(Snake snake1, Snake snake2) {
-            string data = "";
-
-            data += snake1.GetHead().x.ToString() + snake1.GetHead().y.ToString();
-
+        public void generate_msg(Snake snake1, ConsoleKeyInfo key) {
+            string data = String.Concat(
+                                        ".",
+                                        snake1.GetHead().x,
+                                        ".",
+                                        snake1.GetHead().y,
+                                        ".",
+                                        key.Key.ToString()
+                                        );
 
             send_msg(data);
         }

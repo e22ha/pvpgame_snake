@@ -13,3 +13,4 @@ D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.dll
 D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\ref\server.dll
 D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.pdb
 D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.genruntimeconfig.cache
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.csproj.AssemblyReference.cache

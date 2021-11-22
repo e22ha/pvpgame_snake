@@ -128,14 +128,21 @@ namespace server
                             Thread pingThread = new Thread(() => ping_pong(u));
                             pingThread.Start();
                         }
+                        //else if (message.StartsWith("."))
+                        //{
+
+                        //}
                         else
                         {
                             Console.WriteLine(message);
                             data = Encoding.Unicode.GetBytes(message);
                             foreach (User us in Users)
                             {
-                                //отправка сообщения обратно клиенту
-                                if (us.availabel == true) us.stream.Write(data, 0, data.Length);
+                                if (u.client != us.client)
+                                {
+                                    //отправка сообщения обратно клиенту
+                                    if (us.availabel == true) us.stream.Write(data, 0, data.Length);
+                                }
                             }
                         }
                     }
@@ -152,11 +159,11 @@ namespace server
                     stream.Close();
                 if (client != null)
                     client.Close();
-                 Console.WriteLine("Пользователь отлючён");
+                Console.WriteLine("Пользователь отлючён");
             }
         }
 
-         static void start_server()
+        static void start_server()
         {
 
             //создание объекта для отслеживания сообщений переданных с ip адреса через порт

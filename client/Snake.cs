@@ -33,6 +33,8 @@ namespace console_snake
 
         public Point GetHead() => snake.Last();
 
+        public Direction GetDirection() => this.direction;
+
         public void Move()
         {
             head = GetNextPoint();
