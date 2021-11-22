@@ -1,0 +1,15 @@
+D:\Code\PiOGI 2\pvpgame_snake\server\bin\Debug\net5.0\server.exe
+D:\Code\PiOGI 2\pvpgame_snake\server\bin\Debug\net5.0\server.deps.json
+D:\Code\PiOGI 2\pvpgame_snake\server\bin\Debug\net5.0\server.runtimeconfig.json
+D:\Code\PiOGI 2\pvpgame_snake\server\bin\Debug\net5.0\server.runtimeconfig.dev.json
+D:\Code\PiOGI 2\pvpgame_snake\server\bin\Debug\net5.0\server.dll
+D:\Code\PiOGI 2\pvpgame_snake\server\bin\Debug\net5.0\ref\server.dll
+D:\Code\PiOGI 2\pvpgame_snake\server\bin\Debug\net5.0\server.pdb
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.GeneratedMSBuildEditorConfig.editorconfig
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.AssemblyInfoInputs.cache
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.AssemblyInfo.cs
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.csproj.CoreCompileInputs.cache
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.dll
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\ref\server.dll
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.pdb
+D:\Code\PiOGI 2\pvpgame_snake\server\obj\Debug\net5.0\server.genruntimeconfig.cache

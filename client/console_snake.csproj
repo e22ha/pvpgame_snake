@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include=".wav\icon_06.wav" />
+    <Content Include=".wav\icon_06.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

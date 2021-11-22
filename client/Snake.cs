@@ -92,16 +92,24 @@ namespace console_snake
                     case Direction.LEFT:
                     case Direction.RIGHT:
                         if (key == ConsoleKey.DownArrow)
+                        {
                             direction = Direction.DOWN;
+                        }
                         else if (key == ConsoleKey.UpArrow)
+                        {
                             direction = Direction.UP;
+                        }
                         break;
                     case Direction.UP:
                     case Direction.DOWN:
                         if (key == ConsoleKey.LeftArrow)
+                        {
                             direction = Direction.LEFT;
+                        }
                         else if (key == ConsoleKey.RightArrow)
+                        {
                             direction = Direction.RIGHT;
+                        }
                         break;
                 }
                 rotate = false;

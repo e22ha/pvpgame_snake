@@ -13,15 +13,16 @@ namespace server
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            start_server();
         }
 
         //прослушиваемый порт
-        int port = 8888;
+        static int port = 8888;
         //объект, прослушивающий порт
         static TcpListener listener;
-        TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
+        static TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
 
-        class User
+        struct User
         {
             public DateTime lastPong;
             public TcpClient client;
@@ -33,13 +34,13 @@ namespace server
             }
         }
 
-        List<User> Users = new List<User>();
+        static List<User> Users = new List<User>();
 
         //List<NetworkStream> users = new List<NetworkStream>();
         //List<TcpClient> clients = new List<TcpClient>();
 
         //функция ожидания и приёма запросов на подключение
-        void listen()
+        static void listen()
         {
             //цикл подключения клиентов
             try
@@ -62,7 +63,7 @@ namespace server
         }
 
         //обработка сообщений от клиента
-        public void Process(TcpClient tcpClient)
+        public static void Process(TcpClient tcpClient)
         {
             TcpClient client = tcpClient;
             NetworkStream stream = null; //получение канала связи с клиентом
@@ -155,7 +156,7 @@ namespace server
             }
         }
 
-        private void start_server()
+         static void start_server()
         {
 
             //создание объекта для отслеживания сообщений переданных с ip адреса через порт
@@ -170,7 +171,7 @@ namespace server
             Console.WriteLine("Сервер запущен");
         }
 
-        private void stop_server()
+        static void stop_server()
         {
 
             send_msg("/close");
@@ -193,7 +194,7 @@ namespace server
             Console.WriteLine("Сервер остановлен");
         }
 
-        void send_msg(string ms)
+        static void send_msg(string ms)
         {
             foreach (User u in Users)
             {
@@ -217,7 +218,7 @@ namespace server
             }
         }
 
-        void ping_pong(User u)
+        static void ping_pong(User u)
         {
             Thread.Sleep(3000);
             if (u.availabel == true)
@@ -236,7 +237,7 @@ namespace server
             }
         }
 
-        private void Exit()
+        static void Exit()
         {
             if (Users.Count != 0)
             {

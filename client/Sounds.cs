@@ -1,5 +1,8 @@
 ﻿using System.Threading;
 using System.Media;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace console_snake
 {
@@ -15,7 +18,9 @@ namespace console_snake
         private static void EatSound()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = @"D:\Code\PiOGI 2\pvpgame_snake\.wav\icon_06.wav";
+            var appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var fullPath = Path.Combine(appDir, @".wav/icon_06.wav");
+            player.SoundLocation = fullPath;
             player.Play();
         }
 
