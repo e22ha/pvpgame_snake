@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "4v2OWTqV2ADrbgvwS79RZEUcoemiG5rPCjzJYDPWDDr2SjgxGDE8as2Lh8P55tfCfM564Q3aoP8yhSiIrvHWgA==",
+  "success": true,
+  "projectFilePath": "D:\\Code\\PiOGI 2\\pvpgame_snake\\server\\server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
