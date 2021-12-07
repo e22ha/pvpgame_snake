@@ -88,10 +88,14 @@ namespace console_snake
                             data = Encoding.Unicode.GetBytes("/pong");
                             stream.Write(data, 0, data.Length);
                         }
+                        else if(message.StartsWith("."))
+                        {
+                            DataForUpdate?.Invoke(message,null);
+
+                        }
                         else
                         {
                             altcons.WriteLine(message);
-                            DataForUpdate?.Invoke(message,null);
                         }
                     }
                     else
@@ -145,14 +149,12 @@ namespace console_snake
             }
         }
 
-        public void generate_msg(Snake snake1, ConsoleKeyInfo key) {
+        public void generate_msg(string guid, ConsoleKeyInfo key) {
             string data = String.Concat(
                                         ".",
-                                        snake1.GetHead().x,
+                                        key.Key.ToString(),
                                         ".",
-                                        snake1.GetHead().y,
-                                        ".",
-                                        key.Key.ToString()
+                                        guid
                                         );
 
             send_msg(data);
@@ -206,5 +208,17 @@ namespace console_snake
                 stream.Write(data, 0, data.Length);
             }
         }
+
+        public void first(string guid)
+        {
+            if (stream != null)
+            {
+                //преобразование сообщение в массив байтов
+                byte[] data = Encoding.Unicode.GetBytes(guid);
+                //отправка сообщения
+                stream.Write(data, 0, data.Length);
+            }
+        }
+
     }
 }

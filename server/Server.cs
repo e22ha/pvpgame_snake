@@ -11,15 +11,19 @@ namespace server
 {
     class Server
     {
+        public event EventHandler UpdateDirection;
+        public event EventHandler AddNewPlayer;
         TcpListener listener;
         TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
-        List<Player> Players = new List<Player>();
+        public List<Player> Players = new List<Player>();
+
+        public Server() { }
         public Server(string ip, int port)
         {
             listener = new TcpListener(IPAddress.Parse(ip), port);
         }
 
-        struct Player
+        public struct Player
         {
             public DateTime lastPong;
             public TcpClient client;
@@ -29,6 +33,7 @@ namespace server
             {
                 availabel = st;
             }
+            public string Guid;
         }
 
         //функция ожидания и приёма запросов на подключение
@@ -53,6 +58,8 @@ namespace server
             }
         }
 
+
+
         //обработка сообщений от клиента
         private void Process(TcpClient tcpClient)
         {
@@ -71,6 +78,7 @@ namespace server
                 u.stream = stream;
                 u.lastPong = DateTime.Now;
                 u.availabel = true;
+
                 Players.Add(u);
 
                 data = Encoding.Unicode.GetBytes("/ping"); //отправка первого сообщения пинг
@@ -103,7 +111,13 @@ namespace server
                         while (stream.DataAvailable);
                         //преобразование сообщения
                         string message = builder.ToString();
-                        if (message == "/bye")
+                        if (message.StartsWith("#"))
+                        {
+                            message = message.Trim('#');
+                            u.Guid = message;
+                            AddNewPlayer?.Invoke(message, null);
+                        }
+                        else if (message == "/bye")
                         {
                             Console.WriteLine(message);
                             u.availabel = false;
@@ -117,10 +131,10 @@ namespace server
                             Thread pingThread = new Thread(() => ping_pong(u));
                             pingThread.Start();
                         }
-                        //else if (message.StartsWith("."))
-                        //{
-
-                        //}
+                        else if (message.StartsWith("."))
+                        {
+                            UpdateDirection?.Invoke(message, null);
+                        }
                         else
                         {
                             Console.WriteLine(message);
@@ -149,10 +163,14 @@ namespace server
                 if (client != null)
                     client.Close();
                 Console.WriteLine("Пользователь отлючён");
+                if (Players.Count == 0)
+                {
+                    stop();
+                }
             }
         }
 
-        public void _start()
+        public void start()
         {
             //начало прослушивания
             listener.Start();
@@ -162,7 +180,7 @@ namespace server
             Console.WriteLine("Сервер запущен");
         }
 
-        public void _stop()
+        public void stop()
         {
             send_msg("/close");
             listener.Stop();
@@ -206,7 +224,17 @@ namespace server
                 }
             }
         }
+        public void sendField(object sender, EventArgs e)
+        {
+            string data = "";
 
+            foreach (var item in (List<object>)sender)
+            {
+                data = String.Concat(data, ".", item);
+            }
+
+            send_msg(data);
+        }
         private void ping_pong(Player u)
         {
             Thread.Sleep(3000);

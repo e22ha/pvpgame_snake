@@ -14,6 +14,7 @@ namespace console_snake
         private int step = 1;
         private Point tail;
         private Point head;
+        public Guid guid;
 
         bool rotate = true;
 
@@ -29,6 +30,8 @@ namespace console_snake
 
                 p.Draw();
             }
+
+            guid = new();
         }
 
         public Point GetHead() => snake.Last();
