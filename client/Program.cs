@@ -19,7 +19,7 @@ namespace console_snake
 
         static Timer time;
 
-        static string Guid;
+        static string guid;
 
         const string parameterForSecondProcess = "--secondary";
         static public Client client = new Client();
@@ -84,9 +84,12 @@ namespace console_snake
                 if (Console.ReadKey().Key == ConsoleKey.Y)
                 {
                     client.connect_();
-                    Guid = new Guid().ToString();
+                    Guid g = Guid.NewGuid();
+                    guid = g.ToString();
+                    client.altcons.SetTitle("Client " + guid.Substring(0, 4));
+                    Console.Title = "Snake_game " + guid.Substring(0, 4);
                     string ch = "#";
-                    string msg = String.Concat(ch, Guid);
+                    string msg = String.Concat(ch, guid);
                     client.first(msg);
                     Console.Clear();
                     walls = new Walls(x, y, '#');
@@ -98,7 +101,7 @@ namespace console_snake
                         {
                             ConsoleKeyInfo key = Console.ReadKey(true);
 
-                            client.generate_msg(Guid, key);
+                            client.generate_msg(guid, key);
                         }
                     }
                 }

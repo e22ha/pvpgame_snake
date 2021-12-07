@@ -101,6 +101,7 @@ namespace console_snake
                     else
                     {
                         altcons.WriteLine("Сервер не отвечает более 3 секунд");
+                        break;
                     }
                 }
             }

@@ -57,7 +57,7 @@ namespace server
             foodFactory.CreateFood();
             walls = new Walls(x, y, '#');
 
-            time = new Timer(Loop, null, 0, 100);
+            time = new Timer(Loop, null, 0, 1000);
 
 
         }
