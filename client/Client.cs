@@ -25,7 +25,7 @@ namespace console_snake
         DateTime lastPing;
         TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
 
-        public void connect_()
+        public void connect_(string address, int port)
         {
             //получение имени пользователя
             username = "1";

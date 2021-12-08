@@ -49,7 +49,7 @@ namespace server
 
             while (true)
             {
-                if (game.snakes.Count < 2) break;
+                if (game.snakes.Count > 1) break;
             }
 
             game.gStart();

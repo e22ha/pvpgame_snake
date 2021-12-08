@@ -11,6 +11,8 @@ namespace console_snake
     {
         static readonly int x = 80;
         static readonly int y = 26;
+        static string ip = "127.0.0.1";
+        static int port = 8888;
 
         static char food_ch = '@';
         static public Point food { get; private set; }
@@ -83,7 +85,15 @@ namespace console_snake
                 Console.WriteLine("Are you read(y)?");
                 if (Console.ReadKey().Key == ConsoleKey.Y)
                 {
-                    client.connect_();
+                    client.altcons.WriteLine("Set & load client...");
+                    client.altcons.WriteLine("IP?...");
+                    ip = client.altcons.ReadLine();
+                    if (ip == "") ip = "127.0.0.1";
+                    client.altcons.WriteLine("Port?...");
+                    string port_str = client.altcons.ReadLine();
+                    if (port_str == "") port = 8888;
+                    else port = int.Parse(port_str);
+                    client.connect_(ip, port);
                     Guid g = Guid.NewGuid();
                     guid = g.ToString();
                     client.altcons.SetTitle("Client " + guid.Substring(0, 4));
