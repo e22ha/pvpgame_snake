@@ -78,7 +78,7 @@ namespace server
                                          //объект, для формирования строк
             StringBuilder builder = new StringBuilder();
             int bytes = 0;
-            string message = builder.ToString();
+            string message = "";
             string guid = "";
             string name = "";
             byte[] data = new byte[64];// буфер для получаемых данных
@@ -88,7 +88,6 @@ namespace server
             {
                 //получение потока для обмена сообщениями
                 stream = client.GetStream(); //получение канала связи с клиентом
-
 
                 while (true)
                 {
@@ -100,12 +99,13 @@ namespace server
                         builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
                     }
                     while (stream.DataAvailable);
-
+                    message = builder.ToString();
+                    player = new ClientInfo(DateTime.Now, client, stream, "", "");
                     if (checkMsg(message))
                     {
                         string[] d = message.Split('/');
 
-                        guid = d[0];
+                        guid = d[0].Trim('#');
                         if (d.Length > 1)
                         {
                             name = d[1];
@@ -122,15 +122,20 @@ namespace server
                     }
                     else
                     {
-                        data = Encoding.Unicode.GetBytes("Send your guid(and name)"); //отправка первого сообщения пинг
+                        data = Encoding.Unicode.GetBytes("Send your guid(and name)");
                         player.stream.Write(data, 0, data.Length);
                     }
                 }
+
+                data = Encoding.Unicode.GetBytes("/ping"); //отправка первого сообщения пинг
+                stream.Write(data, 0, data.Length);
 
 
                 //цикл ожидания и отправки сообщений
                 while (true)
                 {
+                    builder = new StringBuilder();
+                    data = new byte[64];
                     if (player.availabel == true)
                     {
                         if (DateTime.Now - player.lastPong > difDate)
@@ -156,8 +161,13 @@ namespace server
                             Room.RemoveClient(player.guid);
                             break;
                         }
+                        else if (message.StartsWith("#"))
+                        {
+                            Console.WriteLine(message);
+                        }
                         else if (message == "/pong")
                         {
+                            Console.WriteLine(message);
                             player.UpdateLastPong(DateTime.Now);
                             Thread pingThread = new Thread(() => ping_pong(player));
                             pingThread.Start();

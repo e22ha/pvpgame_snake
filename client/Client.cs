@@ -52,7 +52,7 @@ namespace console_snake
             try //в случае возникновения ошибки - переход к catch
             {
                 lastPing = DateTime.Now;
-                
+
                 //цикл ожидания сообщениями
                 while (true)
                 {
@@ -88,9 +88,9 @@ namespace console_snake
                             data = Encoding.Unicode.GetBytes("/pong");
                             stream.Write(data, 0, data.Length);
                         }
-                        else if(message.StartsWith("."))
+                        else if (message.StartsWith("."))
                         {
-                            DataForUpdate?.Invoke(message,null);
+                            DataForUpdate?.Invoke(message, null);
 
                         }
                         else
@@ -150,7 +150,8 @@ namespace console_snake
             }
         }
 
-        public void generate_msg(string guid, ConsoleKeyInfo key) {
+        public void generate_msg(string guid, ConsoleKeyInfo key)
+        {
             string data = String.Concat(
                                         ".",
                                         key.Key.ToString(),
@@ -167,7 +168,7 @@ namespace console_snake
             {
                 if (i == 0)
                 {
-                      altcons.WriteLine( "s|1..|c");
+                    altcons.WriteLine("s|1..|c");
                 }
                 else if (i == 1)
                 {

@@ -82,6 +82,7 @@ namespace console_snake
                 Console.CursorVisible = false;
 
 
+
                 Console.WriteLine("Are you read(y)?");
                 if (Console.ReadKey().Key == ConsoleKey.Y)
                 {
@@ -99,8 +100,10 @@ namespace console_snake
                     client.altcons.SetTitle("Client " + guid.Substring(0, 4));
                     Console.Title = "Snake_game " + guid.Substring(0, 4);
                     string ch = "#";
-                    string msg = String.Concat(ch, guid);
+                    string slash = "/";
+                    string msg = String.Concat(ch, guid, slash);
                     client.first(msg);
+                    client.altcons.WriteLine(msg);
                     Console.Clear();
                     walls = new Walls(x, y, '#');
 
