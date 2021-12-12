@@ -54,14 +54,15 @@ namespace server
 
             server.AddNewPlayer += game.AddPlayer;
             server.UpdateDirection += game.UpdateDir;
+            server.AllPlayerReady += game.gStart;
             game.nextFrame += server.sendField;
 
-            while (true)
-            {
-                if (game.snakes.Count > 0) break;
-            }
+            //while (true)
+            //{
+            //    if (game.snakes.Count > 0) break;
+            //}
 
-            game.gStart();
+            //game.gStart();
 
         }
     }

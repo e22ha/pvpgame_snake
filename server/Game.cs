@@ -51,7 +51,7 @@ namespace server
         }
 
 
-        public void gStart()
+        public void gStart(object sender, EventArgs e)
         {
             foodFactory = new FoodFactory(x, y, '@');
             foodFactory.CreateFood();

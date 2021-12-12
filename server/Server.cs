@@ -12,6 +12,7 @@ namespace server
     class Server
     {
         public event EventHandler UpdateDirection;
+        public event EventHandler AllPlayerReady;
         public event EventHandler AddNewPlayer;
         TcpListener listener;
         TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
@@ -167,7 +168,6 @@ namespace server
                         }
                         else if (message == "/pong")
                         {
-                            Console.WriteLine(message);
                             player.UpdateLastPong(DateTime.Now);
                             Thread pingThread = new Thread(() => ping_pong(player));
                             pingThread.Start();
@@ -176,9 +176,23 @@ namespace server
                         {
                             UpdateDirection?.Invoke(message, null);
                         }
+                        else if (message.StartsWith("/clientlist"))
+                        {
+                        }
+                        else if (message.StartsWith("/ready"))
+                        {
+                            player.gameready = true;
+                            int i = 0;
+                            foreach (ClientInfo c in Room.getClients())
+                            {
+                                if (c.gameready) i++;
+                            }
+                            if (Room.getClients().Count == i) AllPlayerReady?.Invoke(null, null);
+
+                        }
                         else
                         {
-                            Console.WriteLine(message);
+                            Console.WriteLine("ryhptmdyjnt,j  " + message);
                             data = Encoding.Unicode.GetBytes(message);
                             foreach (ClientInfo c in Room.getClients())
                             {

@@ -170,15 +170,15 @@ namespace console_snake
             {
                 if (i == 0)
                 {
-                    Console.Title = "GAME " + guid.Substring(0,4) + " s|1..|c";
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " s|1..|c";
                 }
                 else if (i == 1)
                 {
-                    Console.Title = "GAME " + guid.Substring(0,4) + " s|.2.|c";
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " s|.2.|c";
                 }
                 else if (i == 2)
                 {
-                    Console.Title = "GAME " + guid.Substring(0,4) + " s|..3|c";
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " s|..3|c";
                 }
 
                 Thread.Sleep(1000);
@@ -217,6 +217,7 @@ namespace console_snake
         {
             if (stream != null)
             {
+                altcons.WriteLine(guid);
                 //преобразование сообщение в массив байтов
                 byte[] data = Encoding.Unicode.GetBytes(guid);
                 //отправка сообщения
