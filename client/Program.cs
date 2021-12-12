@@ -86,37 +86,24 @@ namespace console_snake
                 Console.WriteLine("Are you read(y)?");
                 if (Console.ReadKey().Key == ConsoleKey.Y)
                 {
-                    client.altcons.WriteLine("Set & load client...");
-                    client.altcons.WriteLine("IP?...");
-                    ip = client.altcons.ReadLine();
+                    Console.WriteLine("Set & load client...");
+                    Console.WriteLine("IP?...");
+                    ip = Console.ReadLine();
                     if (ip == "") ip = "127.0.0.1";
-                    client.altcons.WriteLine("Port?...");
-                    string port_str = client.altcons.ReadLine();
+                    Console.WriteLine("Port?...");
+                    string port_str = Console.ReadLine();
                     if (port_str == "") port = 8888;
                     else port = int.Parse(port_str);
-                    client.connect_(ip, port);
                     Guid g = Guid.NewGuid();
                     guid = g.ToString();
+                    client.connect_(ip, port, guid);
                     client.altcons.SetTitle("Client " + guid.Substring(0, 4));
                     Console.Title = "Snake_game " + guid.Substring(0, 4);
                     string ch = "#";
                     string slash = "/";
                     string msg = String.Concat(ch, guid, slash);
                     client.first(msg);
-                    client.altcons.WriteLine(msg);
-                    Console.Clear();
-                    walls = new Walls(x, y, '#');
-
-
-                    while (true)
-                    {
-                        if (Console.KeyAvailable)
-                        {
-                            ConsoleKeyInfo key = Console.ReadKey(true);
-
-                            client.generate_msg(guid, key);
-                        }
-                    }
+                    StartGame();
                 }
             }
             catch (IOException ex)
@@ -125,6 +112,23 @@ namespace console_snake
                 return 1;
             }
             return 0;
+        }
+
+        private static void StartGame()
+        {
+            Console.Clear();
+            walls = new Walls(x, y, '#');
+
+
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+
+                    client.generate_msg(guid, key);
+                }
+            }
         }
 
         static void StartClientProcess(string pipeToken)

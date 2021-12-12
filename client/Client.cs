@@ -21,12 +21,14 @@ namespace console_snake
         //имя пользователя
         string username = "";
         public AlternateConsole altcons;
+        string guid = "";
 
         DateTime lastPing;
         TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
 
-        public void connect_(string address, int port)
+        public void connect_(string address, int port, string g)
         {
+            guid = g;
             //получение имени пользователя
             username = "1";
             try //если возникнет ошибка - переход в catch
@@ -168,15 +170,15 @@ namespace console_snake
             {
                 if (i == 0)
                 {
-                    altcons.WriteLine("s|1..|c");
+                    Console.Title = "GAME " + guid.Substring(0,4) + " s|1..|c";
                 }
                 else if (i == 1)
                 {
-                    altcons.WriteLine("s|.2.|c");
+                    Console.Title = "GAME " + guid.Substring(0,4) + " s|.2.|c";
                 }
                 else if (i == 2)
                 {
-                    altcons.WriteLine("s|..3|c");
+                    Console.Title = "GAME " + guid.Substring(0,4) + " s|..3|c";
                 }
 
                 Thread.Sleep(1000);
