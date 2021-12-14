@@ -8,8 +8,8 @@ namespace server
 {
     class Game
     {
-        static readonly int x = 80;
-        static readonly int y = 26;
+        static readonly int x = 45;
+        static readonly int y = 45;
 
         static Walls walls;
         static FoodFactory foodFactory;
@@ -63,6 +63,7 @@ namespace server
         }
 
         public event EventHandler nextFrame;
+        public event EventHandler foodEat;
         void Loop(object obj)
         {
 
@@ -75,6 +76,7 @@ namespace server
                 else if (s.Eat(foodFactory.food))//bool func for check all snake eat food
                 {
                     foodFactory.CreateFood();
+                    foodEat?.Invoke(s.guid, null);
                 }
                 else
                 {

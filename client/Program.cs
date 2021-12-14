@@ -9,8 +9,8 @@ namespace console_snake
 {
     class Program
     {
-        static readonly int x = 80;
-        static readonly int y = 26;
+        static readonly int x = 45;
+        static readonly int y = 45;
         static string ip = "127.0.0.1";
         static int port = 8888;
 
@@ -29,10 +29,24 @@ namespace console_snake
         static int Main(string[] args)
         {
             client.DataForUpdate += Client_DataForUpdate;
+            client.PlaySound += Client_PlaySound;
             if (args.FirstOrDefault() == parameterForSecondProcess)
                 return RunClient(args);
             else
                 return RunField(args);
+        }
+
+        private static void Client_PlaySound(object sender, EventArgs e)
+        {
+            switch ((string)sender)
+            {
+                default:
+                    break;
+                case "/play_eat":
+                    Sounds sounds = new();
+                    sounds.LoadEatSound();
+                    break;
+            }
         }
 
         private static void Client_DataForUpdate(object sender, EventArgs e)

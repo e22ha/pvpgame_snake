@@ -64,7 +64,6 @@ namespace server
             }
         }
 
-
         bool checkMsg(string m)
         {
             if (m.StartsWith('#') | m.Contains('/')) return true;
@@ -237,7 +236,7 @@ namespace server
 
         public void stop(LobbyRoom room)
         {
-            send_msg("/close");
+            send_msg_all("/close");
             listener.Stop();
             //тогда закрываем подключения и очищаем список
             try
@@ -257,28 +256,46 @@ namespace server
             Console.WriteLine("Сервер остановлен");
         }
 
-        void send_msg(string ms)
+        void send_msg_all(string ms)
         {
             foreach (ClientInfo c in Room.getClients())
             {
-                if (c.availabel == true)
+                sendToOne(ms, c);
+            }
+        }
+
+        private static void sendToOne(string ms, ClientInfo c)
+        {
+            if (c.availabel == true)
+            {
+                NetworkStream ns = c.stream;
+                try
                 {
-                    NetworkStream ns = c.stream;
-                    try
-                    {
-                        byte[] data = new byte[64];// буфер для получаемых данных
-                        string message = ms;
-                        Console.WriteLine(message);
-                        data = Encoding.Unicode.GetBytes(message);
-                        ns.Write(data, 0, data.Length);
-                    }
-                    catch (Exception ex) //если возникла ошибка, вывести сообщение об ошибке
-                    {
-                        Console.WriteLine("send_msg: " + ex.Message);
-                    }
+                    byte[] data = new byte[64];// буфер для получаемых данных
+                    string message = ms;
+                    Console.WriteLine(message);
+                    data = Encoding.Unicode.GetBytes(message);
+                    ns.Write(data, 0, data.Length);
+                }
+                catch (Exception ex) //если возникла ошибка, вывести сообщение об ошибке
+                {
+                    Console.WriteLine("send_msg: " + ex.Message);
                 }
             }
         }
+
+        public void sendSound_eat(object sender, EventArgs e)
+        {
+            foreach(ClientInfo clientInfo in Room.getClients())
+            {
+                if(clientInfo.guid == (string)sender)
+                {
+                    sendToOne("/play_eat", clientInfo);
+                    break;
+                }
+            }
+        }
+
         public void sendField(object sender, EventArgs e)
         {
             string data = "";
@@ -288,7 +305,7 @@ namespace server
                 data = String.Concat(data, ".", item);
             }
 
-            send_msg(data);
+            send_msg_all(data);
         }
         private void ping_pong(ClientInfo c)
         {

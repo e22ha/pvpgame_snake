@@ -57,8 +57,7 @@ namespace console_snake
             head = GetNextPoint();
             if (head == p)
             {
-                Sounds sounds = new();
-                sounds.LoadEatSound();
+
                 snake.Add(head);
                 head.Draw();
                 return true;

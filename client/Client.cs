@@ -95,6 +95,10 @@ namespace console_snake
                             DataForUpdate?.Invoke(message, null);
 
                         }
+                        else if (message.StartsWith("/play_"))
+                        {
+                            PlaySound?.Invoke(message, null);
+                        }
                         else
                         {
                             altcons.WriteLine(message);
@@ -123,6 +127,7 @@ namespace console_snake
         }
 
         public event EventHandler DataForUpdate;
+        public event EventHandler PlaySound;
 
         public void disconnect_()
         {

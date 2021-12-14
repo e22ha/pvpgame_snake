@@ -56,6 +56,7 @@ namespace server
             server.UpdateDirection += game.UpdateDir;
             server.AllPlayerReady += game.gStart;
             game.nextFrame += server.sendField;
+            game.foodEat += server.sendSound_eat;
 
             //while (true)
             //{
