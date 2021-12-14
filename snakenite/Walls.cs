@@ -25,7 +25,7 @@ namespace snakenite
         {
             for (int i = 0; i < x; i++)
             {
-                Game.Point p = (i, y, ch);
+                Game.Point p = (i*10, y*10, ch);
                 p.Draw();
                 wall.Add(p);
             }
@@ -35,7 +35,7 @@ namespace snakenite
         {
             for (int i = 0; i < y; i++)
             {
-                Game.Point p = (x, i, ch);
+                Game.Point p = (x*10, i*10, ch);
                 p.Draw();
                 wall.Add(p);
             }

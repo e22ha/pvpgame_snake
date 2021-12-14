@@ -25,6 +25,8 @@ namespace snakenite
         double workWidth = SystemParameters.WorkArea.Width;
 
         static Walls walls;
+        Snake snake;
+        static  Game.Point food { get;  set; }
 
         public MainWindow()
         {
@@ -34,22 +36,26 @@ namespace snakenite
 
             Game.UpDraw += Game_UpDraw;
 
-            walls = new Walls(10,10, '#');
+            walls = new Walls(43, 43, '#');
+            //chekall();
             //Field.SetTop(new Rectangle { Width = 15, Height = 15, Fill = Brushes.Black }, Left);
+        }
+
+        private void chekall()
+        {
+            snake = new Snake(4, 4, 3);
+            food = (10 * 10, 10 * 10, '@');
+            food.Draw();
         }
 
         private void Game_UpDraw(object sender, EventArgs e)
         {
             string[] Data = sender.ToString().Split(',');
-            Rectangle yech = new Rectangle();
-            yech.Width = 15;
-            yech.Height = 15;
-            yech.Fill = Brushes.Black;
 
-            double x = double.Parse(Data[0]);
-            double y = double.Parse(Data[1]);
+            int x = int.Parse(Data[0]);
+            int y = int.Parse(Data[1]);
 
-            Field.Children.Add(yech);
+            Field.Children.Add(Quad.getQ(x, y, Data[2]));
         }
 
         private void Quit_Click(object sender, RoutedEventArgs e)

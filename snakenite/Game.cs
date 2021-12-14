@@ -10,7 +10,6 @@ namespace snakenite
     {
         public static event EventHandler UpDraw;
 
-        public Game() { }
 
         public struct Point
         {
@@ -40,12 +39,12 @@ namespace snakenite
             {
                 //Console.SetCursorPosition(x, y);
                 //Console.Write(_ch);
-                string message = x + "," + y;
+                string message = x + "," + y + ","+_ch;
                 UpDraw?.Invoke(message, null);
             }
         }
 
-        enum Direction
+        public enum Direction
         {
             LEFT,
             RIGHT,

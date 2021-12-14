@@ -1,13 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "ufIP1BcCuDZZEg9dMGGlDjRTkRkhikidXFdKlrf42U26Lz/DsojHpVkvssEdLaacK+aW9I5jziciFzd5lgQmHQ==",
+  "dgSpecHash": "eVnyACFYr2TxOS+sEu3rQPeHHbC3ShQPl5mHNNJTQ1Q25oRHlYXalfVPJe59XaI+o4jx4vPK4yy4m7+R9YWlxQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Глеб\\Source\\Repos\\pvpgame_snake\\server\\server.csproj",
+  "projectFilePath": "D:\\Code\\PiOGI 2\\pvpgame_snake\\server\\server.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Глеб\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.12\\microsoft.netcore.app.host.win-x64.5.0.12.nupkg.sha512",
-    "C:\\Users\\Глеб\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
-    "C:\\Users\\Глеб\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512",
-    "C:\\Users\\Глеб\\.nuget\\packages\\microsoft.netcore.app.ref\\5.0.0\\microsoft.netcore.app.ref.5.0.0.nupkg.sha512"
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }
