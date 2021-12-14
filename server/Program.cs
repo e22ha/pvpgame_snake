@@ -57,6 +57,7 @@ namespace server
             server.AllPlayerReady += game.gStart;
             game.nextFrame += server.sendField;
             game.foodEat += server.sendSound_eat;
+            game.Lose += server.EndGame;
 
             //while (true)
             //{
@@ -66,5 +67,7 @@ namespace server
             //game.gStart();
 
         }
+
+        
     }
 }

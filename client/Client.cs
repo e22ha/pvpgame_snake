@@ -22,6 +22,7 @@ namespace console_snake
         string username = "";
         public AlternateConsole altcons;
         string guid = "";
+        int score = 0;
 
         DateTime lastPing;
         TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
@@ -98,6 +99,17 @@ namespace console_snake
                         else if (message.StartsWith("/play_"))
                         {
                             PlaySound?.Invoke(message, null);
+                            score += 10;
+                        }
+                        else if (message.StartsWith("/win"))
+                        {
+                            string s = String.Concat(message, ",",score.ToString());
+                            IamWin?.Invoke(s, null);
+                        }
+                        else if (message.StartsWith("/lose"))
+                        {
+                            string s = String.Concat(message, ",", score.ToString());
+                            IamLose?.Invoke(s, null);
                         }
                         else
                         {
@@ -128,6 +140,8 @@ namespace console_snake
 
         public event EventHandler DataForUpdate;
         public event EventHandler PlaySound;
+        public event EventHandler IamWin;
+        public event EventHandler IamLose;
 
         public void disconnect_()
         {
@@ -175,15 +189,15 @@ namespace console_snake
             {
                 if (i == 0)
                 {
-                    Console.Title = "GAME " + guid.Substring(0, 4) + " s|1..|c";
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " SCORE: " + score + " s|1..|c";
                 }
                 else if (i == 1)
                 {
-                    Console.Title = "GAME " + guid.Substring(0, 4) + " s|.2.|c";
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " SCORE: " + score + " s|.2.|c";
                 }
                 else if (i == 2)
                 {
-                    Console.Title = "GAME " + guid.Substring(0, 4) + " s|..3|c";
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " SCORE: " + score + " s|..3|c";
                 }
 
                 Thread.Sleep(1000);

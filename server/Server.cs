@@ -64,6 +64,7 @@ namespace server
             }
         }
 
+
         bool checkMsg(string m)
         {
             if (m.StartsWith('#') | m.Contains('/')) return true;
@@ -264,6 +265,14 @@ namespace server
             }
         }
 
+        internal void EndGame(object sender, EventArgs e)
+        {
+            foreach (ClientInfo client in Room.getClients())
+            {
+                if (client.guid == (string)sender) sendToOne("/lose", client);
+                else sendToOne("/win",client);
+            }
+        }
         private static void sendToOne(string ms, ClientInfo c)
         {
             if (c.availabel == true)
@@ -286,9 +295,9 @@ namespace server
 
         public void sendSound_eat(object sender, EventArgs e)
         {
-            foreach(ClientInfo clientInfo in Room.getClients())
+            foreach (ClientInfo clientInfo in Room.getClients())
             {
-                if(clientInfo.guid == (string)sender)
+                if (clientInfo.guid == (string)sender)
                 {
                     sendToOne("/play_eat", clientInfo);
                     break;
