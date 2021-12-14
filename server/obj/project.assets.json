@@ -8,19 +8,19 @@
     "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\HP\\.nuget\\packages\\": {}
+    "C:\\Users\\Глеб\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\PiOGI 2\\pvpgame_snake\\server\\server.csproj",
+      "projectUniqueName": "C:\\Users\\Глеб\\Source\\Repos\\pvpgame_snake\\server\\server.csproj",
       "projectName": "server",
-      "projectPath": "D:\\Code\\PiOGI 2\\pvpgame_snake\\server\\server.csproj",
-      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\PiOGI 2\\pvpgame_snake\\server\\obj\\",
+      "projectPath": "C:\\Users\\Глеб\\Source\\Repos\\pvpgame_snake\\server\\server.csproj",
+      "packagesPath": "C:\\Users\\Глеб\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Глеб\\Source\\Repos\\pvpgame_snake\\server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Глеб\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -58,6 +58,14 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[5.0.0, 5.0.0]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[5.0.12, 5.0.12]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
             "version": "[5.0.0, 5.0.0]"
           },
           {
