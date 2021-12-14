@@ -24,13 +24,32 @@ namespace snakenite
         double workHeight = SystemParameters.WorkArea.Height;
         double workWidth = SystemParameters.WorkArea.Width;
 
+        static Walls walls;
+
         public MainWindow()
         {
             InitializeComponent();
-            
-            DataContext = new MainWindow();
 
             Line.X2 = Pole.Width + 5;
+
+            Game.UpDraw += Game_UpDraw;
+
+            walls = new Walls(10,10, '#');
+            //Field.SetTop(new Rectangle { Width = 15, Height = 15, Fill = Brushes.Black }, Left);
+        }
+
+        private void Game_UpDraw(object sender, EventArgs e)
+        {
+            string[] Data = sender.ToString().Split(',');
+            Rectangle yech = new Rectangle();
+            yech.Width = 15;
+            yech.Height = 15;
+            yech.Fill = Brushes.Black;
+
+            double x = double.Parse(Data[0]);
+            double y = double.Parse(Data[1]);
+
+            Field.Children.Add(yech);
         }
 
         private void Quit_Click(object sender, RoutedEventArgs e)

@@ -166,49 +166,10 @@
                     </StackPanel>
                 </Grid>
                 <Rectangle x:Name="Pole" Fill="Transparent" StrokeThickness="5" StrokeDashArray="1 0.25" Stroke="#162715" StrokeDashCap="Flat"
-                   Height="450" Width="450" HorizontalAlignment="Left" Margin="5"/>
-                <Grid x:Name="Field">
-                    <ItemsControl Grid.Row="1" Background="Transparent" Margin="5" ItemsSource="{Binding Arena}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Width="18" Height="18" Margin="1" BorderThickness="1">
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Setter Property="BorderBrush" Value="Transparent"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding State}" Value="Snake">
-                                                                <Setter Property="BorderBrush" Value="Blue"/>
-                                                                <Setter Property="Background" Value="DodgerBlue"/>
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding State}" Value="Food">
-                                                                <Setter Property="BorderBrush" Value="Red"/>
-                                                                <Setter Property="Background" Value="LightPink"/>
-                                                                <Setter Property="CornerRadius" Value="9"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
+                   Height="520" Width="690" HorizontalAlignment="Left" Margin="5"/>
+                <Canvas x:Name="Field" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11">
+                    
+                </Canvas>
             </Grid>
         </Grid>
         <Grid Grid.Column="1">
