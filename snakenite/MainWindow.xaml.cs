@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace snakenite
 {
@@ -26,6 +27,8 @@ namespace snakenite
         public MainWindow()
         {
             InitializeComponent();
+            
+            DataContext = new MainWindow();
 
             Line.X2 = Pole.Width + 5;
         }
@@ -81,6 +84,8 @@ namespace snakenite
             Big.Content = "Big";
             Pole.Width = Pole.Height = 450;
             Line.X2 = Pole.Width + 5;
+
+            CenterPosition();
         }
 
         private void Medium_Click(object sender, RoutedEventArgs e)
@@ -91,6 +96,8 @@ namespace snakenite
             Pole.Width = 700;
             Pole.Height = 500;
             Line.X2 = Pole.Width + 5;
+
+            CenterPosition();
         }
 
         private void Big_Click(object sender, RoutedEventArgs e)
@@ -102,7 +109,12 @@ namespace snakenite
             Pole.Width = 1200;
             Pole.Height = 800;
             Line.X2 = Pole.Width + 5;
+            
+            CenterPosition();
+        }
 
+        private void CenterPosition()
+        {
             this.Top = (workHeight - this.Height) / 2;
             this.Left = (workWidth - this.Width) / 2;
         }
@@ -126,6 +138,12 @@ namespace snakenite
 
             _Multi.IsEnabled = true;
             _Multi.Visibility = Visibility.Visible;
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

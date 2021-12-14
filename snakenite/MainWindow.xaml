@@ -55,9 +55,9 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
         </Style>
-        <Style x:Key="Links">
-            <Setter Property="Hyperlink.TextDecorations" Value="Underline"/>
-            <Setter Property="Hyperlink.Foreground" Value="#162715"/>
+        <Style x:Key="Links" TargetType="Hyperlink">
+            <Setter Property="TextDecorations" Value="Underline"/>
+            <Setter Property="Foreground" Value="#162715"/>
         </Style>
     </Window.Resources>
     <Grid Background="#85AC59">
@@ -87,24 +87,24 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Serty" HorizontalAlignment="Left" FontSize="32"/>
                             <Label HorizontalAlignment="Right" FontSize="32" Margin="30,0,0,0">
-                                <Hyperlink NavigateUri="https://github.com/SergeyTy" 
+                                <Hyperlink NavigateUri="https://github.com/SergeyTy" RequestNavigate="Hyperlink_RequestNavigate" 
                                            Style="{StaticResource Links}">Git</Hyperlink>
                             </Label>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Lstaff" HorizontalAlignment="Left" FontSize="32"/>
                             <Label HorizontalAlignment="Right" FontSize="32" Margin="30,0,0,0">
-                                <Hyperlink NavigateUri="https://github.com/Lstafff" 
+                                <Hyperlink NavigateUri="https://github.com/Lstafff" RequestNavigate="Hyperlink_RequestNavigate"
                                            Style="{StaticResource Links}">Git</Hyperlink>
                             </Label>
                         </StackPanel>
                         <Label Content="Project" HorizontalAlignment="Center" FontSize="36" Margin="0,35,0,0"/>
                         <Label HorizontalAlignment="Center" FontSize="32">
-                            <Hyperlink NavigateUri="https://github.com/SergeyTy/pvpgame_snake" 
+                            <Hyperlink NavigateUri="https://github.com/SergeyTy/pvpgame_snake" RequestNavigate="Hyperlink_RequestNavigate"
                                        Style="{StaticResource Links}">Github</Hyperlink>
                         </Label>
                         <Label HorizontalAlignment="Center" FontSize="28" Margin="0,20,0,-8">
-                            <Hyperlink NavigateUri="https://sergeyty.github.io/Web-design/" 
+                            <Hyperlink NavigateUri="https://sergeyty.github.io/Web-design/5" RequestNavigate="Hyperlink_RequestNavigate"
                                        Style="{StaticResource Links}">©Puffciks</Hyperlink>
                         </Label>
                         <Label Content="2021" HorizontalAlignment="Center" FontSize="28"/>
@@ -167,6 +167,48 @@
                 </Grid>
                 <Rectangle x:Name="Pole" Fill="Transparent" StrokeThickness="5" StrokeDashArray="1 0.25" Stroke="#162715" StrokeDashCap="Flat"
                    Height="450" Width="450" HorizontalAlignment="Left" Margin="5"/>
+                <Grid x:Name="Field">
+                    <ItemsControl Grid.Row="1" Background="Transparent" Margin="5" ItemsSource="{Binding Arena}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Width="18" Height="18" Margin="1" BorderThickness="1">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding State}" Value="Snake">
+                                                                <Setter Property="BorderBrush" Value="Blue"/>
+                                                                <Setter Property="Background" Value="DodgerBlue"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding State}" Value="Food">
+                                                                <Setter Property="BorderBrush" Value="Red"/>
+                                                                <Setter Property="Background" Value="LightPink"/>
+                                                                <Setter Property="CornerRadius" Value="9"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
             </Grid>
         </Grid>
         <Grid Grid.Column="1">
