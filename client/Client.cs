@@ -127,7 +127,6 @@ namespace console_snake
             {
                 //вывести сообщение об ошибке
                 altcons.WriteLine(ex.Message);
-
             }
             finally
             {
