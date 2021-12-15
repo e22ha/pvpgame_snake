@@ -26,18 +26,20 @@ namespace snakenite
 
         static Walls walls;
         Snake snake;
+        Client c = new Client();
+        
         static  Game.Point food { get;  set; }
 
         public MainWindow()
         {
             InitializeComponent();
-
+            c.main = Main;
             Line.X2 = Pole.Width + 5;
 
             Game.UpDraw += Game_UpDraw;
 
             walls = new Walls(43, 43, '#');
-            //chekall();
+            chekall();
             //Field.SetTop(new Rectangle { Width = 15, Height = 15, Fill = Brushes.Black }, Left);
         }
 
