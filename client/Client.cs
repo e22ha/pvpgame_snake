@@ -21,12 +21,15 @@ namespace console_snake
         //имя пользователя
         string username = "";
         public AlternateConsole altcons;
+        string guid = "";
+        int score = 0;
 
         DateTime lastPing;
         TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
 
-        public void connect_(string address, int port)
+        public void connect_(string address, int port, string g)
         {
+            guid = g;
             //получение имени пользователя
             username = "1";
             try //если возникнет ошибка - переход в catch
@@ -52,7 +55,7 @@ namespace console_snake
             try //в случае возникновения ошибки - переход к catch
             {
                 lastPing = DateTime.Now;
-                
+
                 //цикл ожидания сообщениями
                 while (true)
                 {
@@ -88,10 +91,25 @@ namespace console_snake
                             data = Encoding.Unicode.GetBytes("/pong");
                             stream.Write(data, 0, data.Length);
                         }
-                        else if(message.StartsWith("."))
+                        else if (message.StartsWith("."))
                         {
-                            DataForUpdate?.Invoke(message,null);
+                            DataForUpdate?.Invoke(message, null);
 
+                        }
+                        else if (message.StartsWith("/play_"))
+                        {
+                            PlaySound?.Invoke(message, null);
+                            score += 10;
+                        }
+                        else if (message.StartsWith("/win"))
+                        {
+                            string s = String.Concat(message, ",",score.ToString());
+                            IamWin?.Invoke(s, null);
+                        }
+                        else if (message.StartsWith("/lose"))
+                        {
+                            string s = String.Concat(message, ",", score.ToString());
+                            IamLose?.Invoke(s, null);
                         }
                         else
                         {
@@ -109,7 +127,6 @@ namespace console_snake
             {
                 //вывести сообщение об ошибке
                 altcons.WriteLine(ex.Message);
-
             }
             finally
             {
@@ -121,6 +138,9 @@ namespace console_snake
         }
 
         public event EventHandler DataForUpdate;
+        public event EventHandler PlaySound;
+        public event EventHandler IamWin;
+        public event EventHandler IamLose;
 
         public void disconnect_()
         {
@@ -150,7 +170,8 @@ namespace console_snake
             }
         }
 
-        public void generate_msg(string guid, ConsoleKeyInfo key) {
+        public void generate_msg(string guid, ConsoleKeyInfo key)
+        {
             string data = String.Concat(
                                         ".",
                                         key.Key.ToString(),
@@ -167,15 +188,15 @@ namespace console_snake
             {
                 if (i == 0)
                 {
-                      altcons.WriteLine( "s|1..|c");
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " SCORE: " + score + " s|1..|c";
                 }
                 else if (i == 1)
                 {
-                    altcons.WriteLine("s|.2.|c");
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " SCORE: " + score + " s|.2.|c";
                 }
                 else if (i == 2)
                 {
-                    altcons.WriteLine("s|..3|c");
+                    Console.Title = "GAME " + guid.Substring(0, 4) + " SCORE: " + score + " s|..3|c";
                 }
 
                 Thread.Sleep(1000);
@@ -214,6 +235,7 @@ namespace console_snake
         {
             if (stream != null)
             {
+                altcons.WriteLine(guid);
                 //преобразование сообщение в массив байтов
                 byte[] data = Encoding.Unicode.GetBytes(guid);
                 //отправка сообщения

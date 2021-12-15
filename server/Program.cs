@@ -19,14 +19,23 @@ namespace server
             LoadServer(server);
             if (Console.ReadLine() == "q")
             {
-                server.stop();
+                server.stop(server.Room);
             }
 
+        }
+        static int FreeTcpPort()
+        {
+            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+            l.Start();
+            int port = ((IPEndPoint)l.LocalEndpoint).Port;
+            l.Stop();
+            return port;
         }
 
         private static void LoadServer(Server server)
         {
             Game game = new();
+            Console.WriteLine(FreeTcpPort().ToString());
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Set & load server...");
 
@@ -45,15 +54,20 @@ namespace server
 
             server.AddNewPlayer += game.AddPlayer;
             server.UpdateDirection += game.UpdateDir;
+            server.AllPlayerReady += game.gStart;
             game.nextFrame += server.sendField;
+            game.foodEat += server.sendSound_eat;
+            game.Lose += server.EndGame;
 
-            while (true)
-            {
-                if (game.snakes.Count > 1) break;
-            }
+            //while (true)
+            //{
+            //    if (game.snakes.Count > 0) break;
+            //}
 
-            game.gStart();
+            //game.gStart();
 
         }
+
+        
     }
 }

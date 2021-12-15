@@ -12,16 +12,22 @@ namespace server
     class Server
     {
         public event EventHandler UpdateDirection;
+        public event EventHandler AllPlayerReady;
         public event EventHandler AddNewPlayer;
         TcpListener listener;
         TimeSpan difDate = new TimeSpan(0, 0, 0, 0, 3100);
-        public List<Player> Players = new List<Player>();
+        //public List<Player> Players = new List<Player>();
+        public LobbyList Rooms = new LobbyList();
+        public LobbyRoom Room = new LobbyRoom(Guid.NewGuid().ToString(), "first");
 
-        public Server() { }
+        //init server
         public Server(string ip, int port)
         {
-            listener = new TcpListener(IPAddress.Parse(ip), port);
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            Console.WriteLine(ipEndPoint.ToString());
+            listener = new TcpListener(ipEndPoint);
         }
+
 
         public struct Player
         {
@@ -54,52 +60,91 @@ namespace server
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("listen: " + ex.Message);
             }
         }
 
 
+        bool checkMsg(string m)
+        {
+            if (m.StartsWith('#') | m.Contains('/')) return true;
+            else return false;
+        }
 
         //обработка сообщений от клиента
         private void Process(TcpClient tcpClient)
         {
             TcpClient client = tcpClient;
             NetworkStream stream = null; //получение канала связи с клиентом
+                                         //объект, для формирования строк
+            StringBuilder builder = new StringBuilder();
+            int bytes = 0;
+            string message = "";
+            string guid = "";
+            string name = "";
+            byte[] data = new byte[64];// буфер для получаемых данных
+            ClientInfo player = new();
 
             try //означает что в случае возникновении ошибки, управление перейдёт к блоку catch
             {
                 //получение потока для обмена сообщениями
                 stream = client.GetStream(); //получение канала связи с клиентом
 
-                byte[] data = new byte[64];// буфер для получаемых данных
+                while (true)
+                {
+                    do
+                    {
+                        //из потока считываются 64 байта и записываются в data начиная с 0
+                        bytes = stream.Read(data, 0, data.Length);
+                        //из считанных данных формируется строка
+                        builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                    }
+                    while (stream.DataAvailable);
+                    message = builder.ToString();
+                    player = new ClientInfo(DateTime.Now, client, stream, "", "");
+                    if (checkMsg(message))
+                    {
+                        string[] d = message.Split('/');
 
-                Player u = new Player();
-                u.client = client;
-                u.stream = stream;
-                u.lastPong = DateTime.Now;
-                u.availabel = true;
+                        guid = d[0].Trim('#');
+                        if (d.Length > 1)
+                        {
+                            name = d[1];
+                        }
+                        else
+                        {
+                            name = guid.Substring(4);
+                        }
 
-                Players.Add(u);
+                        player = new ClientInfo(DateTime.Now, client, stream, guid, name);
+                        Room.AddNewClient(player);
+                        AddNewPlayer?.Invoke(player.guid, null);
+                        break;
+                    }
+                    else
+                    {
+                        data = Encoding.Unicode.GetBytes("Send your guid(and name)");
+                        player.stream.Write(data, 0, data.Length);
+                    }
+                }
 
                 data = Encoding.Unicode.GetBytes("/ping"); //отправка первого сообщения пинг
-                u.stream.Write(data, 0, data.Length);
+                stream.Write(data, 0, data.Length);
+
 
                 //цикл ожидания и отправки сообщений
                 while (true)
                 {
-                    if (u.availabel == true)
+                    builder = new StringBuilder();
+                    data = new byte[64];
+                    if (player.availabel == true)
                     {
-                        //объект, для формирования строк
-                        StringBuilder builder = new StringBuilder();
-                        int bytes = 0;
-
-                        if (DateTime.Now - u.lastPong > difDate)
+                        if (DateTime.Now - player.lastPong > difDate)
                         {
-                            Players.Remove(u);
+                            Room.RemoveClient(player.guid);
                             Console.WriteLine("Клиент не отвечает");
                             break;
                         }
-
                         //до тех пор, пока в потоке есть данные
                         do
                         {
@@ -109,51 +154,61 @@ namespace server
                             builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
                         }
                         while (stream.DataAvailable);
-                        //преобразование сообщения
-                        string message = builder.ToString();
-                        if (message.StartsWith("#"))
-                        {
-                            message = message.Trim('#');
-                            u.Guid = message;
-                            AddNewPlayer?.Invoke(message, null);
-                        }
-                        else if (message == "/bye")
+                        message = builder.ToString(); //преобразование сообщения
+                        if (message == "/bye")
                         {
                             Console.WriteLine(message);
-                            u.availabel = false;
-                            Players.Remove(u);
-
+                            player.availabel = false;
+                            Room.RemoveClient(player.guid);
                             break;
+                        }
+                        else if (message.StartsWith("#"))
+                        {
+                            Console.WriteLine(message);
                         }
                         else if (message == "/pong")
                         {
-                            u.lastPong = DateTime.Now;
-                            Thread pingThread = new Thread(() => ping_pong(u));
+                            player.UpdateLastPong(DateTime.Now);
+                            Thread pingThread = new Thread(() => ping_pong(player));
                             pingThread.Start();
                         }
                         else if (message.StartsWith("."))
                         {
                             UpdateDirection?.Invoke(message, null);
                         }
+                        else if (message.StartsWith("/clientlist"))
+                        {
+                        }
+                        else if (message.StartsWith("/ready"))
+                        {
+                            player.gameready = true;
+                            int i = 0;
+                            foreach (ClientInfo c in Room.getClients())
+                            {
+                                if (c.gameready) i++;
+                            }
+                            if (Room.getClients().Count == i) AllPlayerReady?.Invoke(null, null);
+
+                        }
                         else
                         {
-                            Console.WriteLine(message);
+                            Console.WriteLine("ryhptmdyjnt,j  " + message);
                             data = Encoding.Unicode.GetBytes(message);
-                            foreach (Player us in Players)
+                            foreach (ClientInfo c in Room.getClients())
                             {
-                                if (u.client != us.client)
+                                if (c.client != c.client)
                                 {
-                                    //отправка сообщения обратно клиенту
-                                    if (us.availabel == true) us.stream.Write(data, 0, data.Length);
+                                    if (c.availabel == true) c.stream.Write(data, 0, data.Length);
                                 }
                             }
+
                         }
                     }
                 }
             }
             catch (Exception ex) //если возникла ошибка, вывести сообщение об ошибке
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("process: " + ex.Message);
             }
             finally //после выхода из бесконечного цикла
             {
@@ -163,9 +218,9 @@ namespace server
                 if (client != null)
                     client.Close();
                 Console.WriteLine("Пользователь отлючён");
-                if (Players.Count == 0)
+                if (Room.getClients().Count == 0)
                 {
-                    stop();
+                    stop(Room);
                 }
             }
         }
@@ -180,20 +235,20 @@ namespace server
             Console.WriteLine("Сервер запущен");
         }
 
-        public void stop()
+        public void stop(LobbyRoom room)
         {
-            send_msg("/close");
+            send_msg_all("/close");
             listener.Stop();
             //тогда закрываем подключения и очищаем список
             try
             {
-                foreach (Player ur in Players)
+                foreach (ClientInfo c in room.getClients())
                 {
-                    ur.set(false);
-                    ur.stream.Close();
-                    ur.client.Close();
+                    c.availabel = false;
+                    c.stream.Close();
+                    c.client.Close();
                 }
-                Players.Clear();
+                room.getClients().Clear();
             }
             catch (Exception ex)
             {
@@ -202,28 +257,54 @@ namespace server
             Console.WriteLine("Сервер остановлен");
         }
 
-        void send_msg(string ms)
+        void send_msg_all(string ms)
         {
-            foreach (Player u in Players)
+            foreach (ClientInfo c in Room.getClients())
             {
-                if (u.availabel == true)
+                sendToOne(ms, c);
+            }
+        }
+
+        internal void EndGame(object sender, EventArgs e)
+        {
+            foreach (ClientInfo client in Room.getClients())
+            {
+                if (client.guid == (string)sender) sendToOne("/lose", client);
+                else sendToOne("/win",client);
+            }
+        }
+        private static void sendToOne(string ms, ClientInfo c)
+        {
+            if (c.availabel == true)
+            {
+                NetworkStream ns = c.stream;
+                try
                 {
-                    NetworkStream ns = u.stream;
-                    try
-                    {
-                        byte[] data = new byte[64];// буфер для получаемых данных
-                        string message = ms;
-                        Console.WriteLine(message);
-                        data = Encoding.Unicode.GetBytes(message);
-                        ns.Write(data, 0, data.Length);
-                    }
-                    catch (Exception ex) //если возникла ошибка, вывести сообщение об ошибке
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                    byte[] data = new byte[64];// буфер для получаемых данных
+                    string message = ms;
+                    Console.WriteLine(message);
+                    data = Encoding.Unicode.GetBytes(message);
+                    ns.Write(data, 0, data.Length);
+                }
+                catch (Exception ex) //если возникла ошибка, вывести сообщение об ошибке
+                {
+                    Console.WriteLine("send_msg: " + ex.Message);
                 }
             }
         }
+
+        public void sendSound_eat(object sender, EventArgs e)
+        {
+            foreach (ClientInfo clientInfo in Room.getClients())
+            {
+                if (clientInfo.guid == (string)sender)
+                {
+                    sendToOne("/play_eat", clientInfo);
+                    break;
+                }
+            }
+        }
+
         public void sendField(object sender, EventArgs e)
         {
             string data = "";
@@ -233,19 +314,19 @@ namespace server
                 data = String.Concat(data, ".", item);
             }
 
-            send_msg(data);
+            send_msg_all(data);
         }
-        private void ping_pong(Player u)
+        private void ping_pong(ClientInfo c)
         {
             Thread.Sleep(3000);
-            if (u.availabel == true)
+            if (c.availabel == true)
             {
                 try
                 {
                     byte[] data = new byte[64];// буфер для получаемых данных
 
                     data = Encoding.Unicode.GetBytes("/ping");
-                    u.stream.Write(data, 0, data.Length);
+                    c.stream.Write(data, 0, data.Length);
                 }
                 catch (Exception ex) //если возникла ошибка, вывести сообщение об ошибке
                 {

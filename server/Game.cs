@@ -8,8 +8,8 @@ namespace server
 {
     class Game
     {
-        static readonly int x = 80;
-        static readonly int y = 26;
+        static readonly int x = 45;
+        static readonly int y = 45;
 
         static Walls walls;
         static FoodFactory foodFactory;
@@ -51,30 +51,48 @@ namespace server
         }
 
 
-        public void gStart()
+        public void gStart(object sender, EventArgs e)
         {
             foodFactory = new FoodFactory(x, y, '@');
             foodFactory.CreateFood();
             walls = new Walls(x, y, '#');
 
             time = new Timer(Loop, null, 0, 1000);
-
+            
 
         }
 
         public event EventHandler nextFrame;
+        public event EventHandler foodEat;
+        public event EventHandler Lose;
+        bool snakeEatSnake(Snake snake) 
+        {
+            foreach (Snake s in snakes) 
+            {
+                if (s == snake) break;
+                if (s.IsHitS(snake.GetHead()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         void Loop(object obj)
         {
 
             foreach (var s in snakes)
             {
-                if (walls.IsHit(s.GetHead()) || s.IsHit(s.GetHead()))//bool func for check all snake hit yourself & check all snake hit snake & check all snake hit walss
+                if (walls.IsHit(s.GetHead()) || s.IsHit(s.GetHead()) || snakeEatSnake(s))//bool func for check all snake hit yourself & check all snake hit snake & check all snake hit walss
                 {
-                    time.Change(0, Timeout.Infinite);
+                    time.Dispose();
+                    Console.WriteLine("Game is out");
+                    Lose?.Invoke(s.guid, null);
                 }
-                else if (s.Eat(foodFactory.food))//bool func for check all snake eat food
+                else if (s.Eat(foodFactory.food))
                 {
                     foodFactory.CreateFood();
+                    foodEat?.Invoke(s.guid, null);
                 }
                 else
                 {
@@ -283,6 +301,17 @@ namespace server
         public bool IsHit(Point p)
         {
             for (int i = snake.Count - 2; i > 0; i--)
+            {
+                if (snake[i] == p)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool IsHitS(Point p)
+        {
+            for (int i = snake.Count - 1; i > 0; i--)
             {
                 if (snake[i] == p)
                 {
