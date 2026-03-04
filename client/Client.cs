@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -10,15 +10,15 @@ namespace console_snake
 {
     class Client
     {
-        //номер порта для обмена сообщениями
+        // Port for message exchange
         int port = 8888;
-        //ip адрес сервера
+        // Server IP address
         string address = "127.0.0.1";
-        //объявление TCP клиента
+        // TCP client
         TcpClient client = null;
-        //объявление канала соединения с сервером
+        // Network stream for server connection
         NetworkStream stream = null;
-        //имя пользователя
+        // Username
         string username = "";
         public AlternateConsole altcons;
         string guid = "";
@@ -30,54 +30,48 @@ namespace console_snake
         public void connect_(string address, int port, string g)
         {
             guid = g;
-            //получение имени пользователя
             username = "1";
-            try //если возникнет ошибка - переход в catch
+            try
             {
-                //создание клиента
+                // Create TCP client and connect to server
                 client = new TcpClient(address, port);
-                //получение канала для обмена сообщениями
+                // Get the network stream
                 stream = client.GetStream();
 
-                //создание нового потока для ожидания сообщения от сервера
+                // Start a dedicated thread to listen for server messages
                 Thread listenThread = new Thread(() => listen());
                 listenThread.Start();
-                altcons.WriteLine("Соединение установлено");
+                altcons.WriteLine("Connection established");
             }
             catch (Exception ex)
             {
                 altcons.WriteLine(ex.Message);
             }
         }
-        //функция ожидания сообщений от сервера
+
+        // Listens for incoming server messages
         void listen()
         {
-            try //в случае возникновения ошибки - переход к catch
+            try
             {
                 lastPing = DateTime.Now;
 
-                //цикл ожидания сообщениями
                 while (true)
                 {
                     if ((DateTime.Now - lastPing) < difDate)
                     {
-                        //буфер для получаемых данных
-                        byte[] data = new byte[64];
-                        //объект для построения смтрок
+                        // Buffer for received data
+                        byte[] data = new byte[1024];
                         StringBuilder builder = new StringBuilder();
                         int bytes = 0;
-                        //до тех пор, пока есть данные в потоке
+                        // Read all available data from the stream
                         do
                         {
-                            //получение 64 байт
                             bytes = stream.Read(data, 0, data.Length);
-                            //формирование строки
                             builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
                         }
                         while (stream.DataAvailable);
-                        //получить строку
                         string message = builder.ToString();
-                        //вывод сообщения в лог клиента
                         if (message == "/close")
                         {
                             break;
@@ -94,7 +88,6 @@ namespace console_snake
                         else if (message.StartsWith("."))
                         {
                             DataForUpdate?.Invoke(message, null);
-
                         }
                         else if (message.StartsWith("/play_"))
                         {
@@ -103,7 +96,7 @@ namespace console_snake
                         }
                         else if (message.StartsWith("/win"))
                         {
-                            string s = String.Concat(message, ",",score.ToString());
+                            string s = String.Concat(message, ",", score.ToString());
                             IamWin?.Invoke(s, null);
                         }
                         else if (message.StartsWith("/lose"))
@@ -118,22 +111,21 @@ namespace console_snake
                     }
                     else
                     {
-                        altcons.WriteLine("Сервер не отвечает более 3 секунд");
+                        altcons.WriteLine("Server not responding for more than 3 seconds");
                         break;
                     }
                 }
             }
             catch (Exception ex)
             {
-                //вывести сообщение об ошибке
                 altcons.WriteLine(ex.Message);
             }
             finally
             {
-                //закрыть канал связи и завершить работу клиента
+                // Close the stream and terminate the client
                 stream.Close();
                 client.Close();
-                altcons.WriteLine("Соединение разорвано");
+                altcons.WriteLine("Connection closed");
             }
         }
 
@@ -144,7 +136,7 @@ namespace console_snake
 
         public void disconnect_()
         {
-            altcons.WriteLine("Отключение...");
+            altcons.WriteLine("Disconnecting...");
             send_msg("/bye");
             stream.Close();
             client.Close();
@@ -157,13 +149,13 @@ namespace console_snake
                 try
                 {
                     stream = client.GetStream();
-                    byte[] data = new byte[64];// буфер для получаемых данных
+                    // Buffer for outgoing data
                     string message = ms;
                     altcons.WriteLine(message);
-                    data = Encoding.Unicode.GetBytes(message);
+                    byte[] data = Encoding.Unicode.GetBytes(message);
                     stream.Write(data, 0, data.Length);
                 }
-                catch (Exception ex) //если возникла ошибка, вывести сообщение об ошибке
+                catch (Exception ex)
                 {
                     altcons.WriteLine(ex.Message);
                 }
@@ -207,26 +199,24 @@ namespace console_snake
         {
             if (stream != null)
             {
-                altcons.WriteLine("Отключение...");
+                altcons.WriteLine("Disconnecting...");
                 send_msg("/bye");
                 stream.Close();
                 client.Close();
-                altcons.WriteLine("Отключено");
+                altcons.WriteLine("Disconnected");
             }
-
         }
 
         private void send_(string msg)
         {
             if (stream != null)
             {
-                //получение сообщения
                 string message = msg;
-                //добавление имени пользователя к сообщению
+                // Prepend username to message
                 message = String.Format("{0}: {1}", username, message);
-                //преобразование сообщение в массив байтов
+                // Encode message to bytes
                 byte[] data = Encoding.Unicode.GetBytes(message);
-                //отправка сообщения
+                // Send the message
                 stream.Write(data, 0, data.Length);
             }
         }
@@ -236,12 +226,10 @@ namespace console_snake
             if (stream != null)
             {
                 altcons.WriteLine(guid);
-                //преобразование сообщение в массив байтов
+                // Encode and send registration message
                 byte[] data = Encoding.Unicode.GetBytes(guid);
-                //отправка сообщения
                 stream.Write(data, 0, data.Length);
             }
         }
-
     }
 }

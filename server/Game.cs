@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +15,16 @@ namespace server
         static FoodFactory foodFactory;
         static Timer time;
         public List<Snake> snakes = new();
-        static Snake snake;
 
-        //событие при получении нового игрока
+        // Event: new player added
         public void AddPlayer(object sender, EventArgs e)
         {
             string data = sender.ToString();
-            Snake snake = new(snakes.Count + 1 * 10, snakes.Count + 1 * 5, 3, data);
+            Snake snake = new((snakes.Count + 1) * 10, (snakes.Count + 1) * 5, 3, data);
             snakes.Add(snake);
         }
 
-        //событие обновления позиции
+        // Event: direction update received
         public void UpdateDir(object sender, EventArgs e)
         {
             string[] data = sender.ToString().Split(".");
@@ -33,10 +32,6 @@ namespace server
             {
                 if (s.guid == data[2])
                 {
-                    //LeftArrow 37 Клавиша СТРЕЛКА ВЛЕВО.
-                    //UpArrow 38 Клавиша СТРЕЛКА ВВЕРХ.
-                    //RightArrow 39 Клавиша СТРЕЛКА ВПРАВО.
-                    //DownArrow	40 Клавиша СТРЕЛКА ВНИЗ.
                     if (data[1] == "RightArrow")
                         s.Rotation(ConsoleKey.RightArrow);
                     else if (data[1] == "LeftArrow")
@@ -47,9 +42,7 @@ namespace server
                         s.Rotation(ConsoleKey.DownArrow);
                 }
             }
-
         }
-
 
         public void gStart(object sender, EventArgs e)
         {
@@ -58,16 +51,15 @@ namespace server
             walls = new Walls(x, y, '#');
 
             time = new Timer(Loop, null, 0, 1000);
-            
-
         }
 
         public event EventHandler nextFrame;
         public event EventHandler foodEat;
         public event EventHandler Lose;
-        bool snakeEatSnake(Snake snake) 
+
+        bool snakeEatSnake(Snake snake)
         {
-            foreach (Snake s in snakes) 
+            foreach (Snake s in snakes)
             {
                 if (s == snake) break;
                 if (s.IsHitS(snake.GetHead()))
@@ -75,18 +67,18 @@ namespace server
                     return true;
                 }
             }
-
             return false;
         }
+
         void Loop(object obj)
         {
-
             foreach (var s in snakes)
             {
-                if (walls.IsHit(s.GetHead()) || s.IsHit(s.GetHead()) || snakeEatSnake(s))//bool func for check all snake hit yourself & check all snake hit snake & check all snake hit walss
+                // Check collisions: wall hit, self-hit, snake-vs-snake
+                if (walls.IsHit(s.GetHead()) || s.IsHit(s.GetHead()) || snakeEatSnake(s))
                 {
                     time.Dispose();
-                    Console.WriteLine("Game is out");
+                    Console.WriteLine("Game over");
                     Lose?.Invoke(s.guid, null);
                 }
                 else if (s.Eat(foodFactory.food))
@@ -98,7 +90,6 @@ namespace server
                 {
                     s.Move();
                 }
-
             }
 
             List<object> l = new();
@@ -158,7 +149,6 @@ namespace server
             for (int i = 0; i < x; i++)
             {
                 Point p = (i, y, ch);
-
                 wall.Add(p);
             }
         }
@@ -168,7 +158,6 @@ namespace server
             for (int i = 0; i < y; i++)
             {
                 Point p = (x, i, ch);
-
                 wall.Add(p);
             }
         }
@@ -204,7 +193,6 @@ namespace server
         private Point head;
         public string guid;
 
-
         bool rotate = true;
 
         public Snake(int x, int y, int length, string guid)
@@ -232,9 +220,6 @@ namespace server
 
             tail = snake.First();
             snake.Remove(tail);
-
-
-
 
             rotate = true;
         }
@@ -295,7 +280,6 @@ namespace server
                 }
                 rotate = false;
             }
-
         }
 
         public bool IsHit(Point p)
@@ -309,6 +293,7 @@ namespace server
             }
             return false;
         }
+
         public bool IsHitS(Point p)
         {
             for (int i = snake.Count - 1; i > 0; i--)
@@ -345,4 +330,3 @@ namespace server
         }
     }
 }
-
